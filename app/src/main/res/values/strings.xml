@@ -1,3 +1,4 @@
 <resources>
   <string name="app_name">quizApp</string>
+  <string name="start">スタート</string>
 </resources>
