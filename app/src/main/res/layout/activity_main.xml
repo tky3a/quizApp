@@ -63,13 +63,15 @@
             android:layout_marginTop="@dimen/_20dp"
         >
 
-          <EditText android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Name"
-                    android:inputType="textCapWords"
-                    android:textColor="#363A43"
-                    android:textColorHint="#7A8089"
-                    tools:ignore="SpeakableTextPresentCheck"/>
+          <EditText
+              android:id="@+id/etName"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="Name"
+              android:inputType="textCapWords"
+              android:textColor="#363A43"
+              android:textColorHint="#7A8089"
+              tools:ignore="SpeakableTextPresentCheck"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,6 +82,7 @@
                 android:backgroundTint="@color/design_default_color_primary"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_18sp"
+                android:id="@+id/btnStart"
         />
 
       </LinearLayout>
