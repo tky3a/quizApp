@@ -3,11 +3,9 @@ package ja.tutorial.quizapp
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
@@ -53,11 +51,14 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         // Constant Object からレスポンスを取得
         mQuestionsList = Constants.getQuestions()
 
+        // ここで初期化を行う
         setQuestion()
-        // defaultOptionsView()
     }
 
+    // 問題をセットする関数
     private fun setQuestion() {
+        // 選択肢のStyleを初期化
+        defaultOptionsView()
 
         val question: Question = mQuestionsList!![mCurrentPosition - 1] // NonNull nullではない強制
         progressBar?.progress = mCurrentPosition
@@ -155,9 +156,67 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
             // 対象のidがタップされたら発火
             R.id.btnSubmit -> {
-                // TODO: btnSubmit処理
+                // 初期値の場合
+                if (mSelectedOptionPosition == 0) {
+                    // 問題スキップ
+                    mCurrentPosition++
+
+                    when {
+                        mCurrentPosition <= mQuestionsList!!.size -> {
+                            // 次の問題をセット
+                            setQuestion()
+                        }
+                        else -> {
+                            // 最後の問題でFinishしたらトーストを出す
+                            Toast.makeText(this, "最終問題", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else {
+                    val question = mQuestionsList?.get(mCurrentPosition - 1)
+                    Log.e("questionAnswer", question!!.correctAnswer.toString())
+                    Log.e("mSelectedOptionPosition", mSelectedOptionPosition.toString())
+                    // 正解？
+                    if (question!!.correctAnswer != mSelectedOptionPosition) {
+                        Log.e("不正解", R.drawable.correct_option_border_bg.toString())
+                        answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+                    }
+                    // 正解に色をつける
+                    answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
+
+                    Log.e("kakunin", mQuestionsList!!.size.toString())
+
+                    // 現在の問題数と全体の問題数を判定
+                    if (mCurrentPosition == mQuestionsList!!.size) {
+                        btnSubmit?.text = "FINISH"
+                    } else {
+                        btnSubmit?.text = "次へ進む"
+                    }
+
+                    // 選択位置を初期化
+                    mSelectedOptionPosition = 0
+                }
             }
         }
+    }
+
+    // ボタン押下時に正解、不正解の色を設定する関数
+    private fun answerView(answer: Int, drawableView: Int) {
+        when (answer) {
+            1 -> {
+                tvOptionOne?.background = ContextCompat.getDrawable(this, drawableView)
+            }
+            2 -> {
+                // this@QuizQuestionsActivity対象クラスのクリックリスナーにアクセスできる？
+                tvOptionTwo?.background = ContextCompat.getDrawable(this@QuizQuestionsActivity, drawableView)
+            }
+            3 -> {
+                tvOptionThree?.background = ContextCompat.getDrawable(this@QuizQuestionsActivity, drawableView)
+            }
+            4 -> {
+                tvOptionFour?.background = ContextCompat.getDrawable(this@QuizQuestionsActivity, drawableView)
+            }
+        }
+
     }
 
 }
