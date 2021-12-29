@@ -121,7 +121,7 @@
             android:backgroundTint="@color/design_default_color_primary"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sp"
-            android:id="@+id/btnStart"
+            android:id="@+id/btnSubmit"
     />
 
 
