@@ -1,11 +1,15 @@
 package ja.tutorial.quizapp
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
@@ -15,6 +19,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private var mCurrentPosition: Int = 1
     private var mQuestionsList: ArrayList<Question>? = null
     private var mSelectedOptionPosition: Int = 0
+    private var mUserName: String? = null
+    private var mCorrectAnswers: Int = 0 // 正解回数
 
     private var progressBar: ProgressBar? = null
     private var tvProgress: TextView? = null
@@ -30,6 +36,9 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_questions)
+
+        // Constants.USER_NAMEの値をkeyとして遷移前の画面から渡ってきた値を取得
+        mUserName = intent.getStringExtra(Constants.USER_NAME)
 
         progressBar = findViewById(R.id.progressBar)
         tvProgress = findViewById(R.id.tvProgressText)
@@ -162,23 +171,34 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                     mCurrentPosition++
 
                     when {
+                        // 次の問題が存在している場合
                         mCurrentPosition <= mQuestionsList!!.size -> {
                             // 次の問題をセット
                             setQuestion()
                         }
+                        // それ以外の処理
                         else -> {
-                            // 最後の問題でFinishしたらトーストを出す
-                            Toast.makeText(this, "最終問題", Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, ResultActivity::class.java)
+                            // パラメータを設定
+                            intent.putExtra(Constants.USER_NAME, mUserName)
+                            intent.putExtra(Constants.CORRECT_ANSWER, mCorrectAnswers)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionsList!!.size)
+                            // 遷移
+                            startActivity(intent)
+                            finish()
                         }
                     }
                 } else {
                     val question = mQuestionsList?.get(mCurrentPosition - 1)
                     Log.e("questionAnswer", question!!.correctAnswer.toString())
                     Log.e("mSelectedOptionPosition", mSelectedOptionPosition.toString())
-                    // 正解？
+                    // 不正解の場合
                     if (question!!.correctAnswer != mSelectedOptionPosition) {
                         Log.e("不正解", R.drawable.correct_option_border_bg.toString())
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+                    } else {
+                        // 正解の場合
+                        mCorrectAnswers++
                     }
                     // 正解に色をつける
                     answerView(question.correctAnswer, R.drawable.correct_option_border_bg)

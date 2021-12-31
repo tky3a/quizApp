@@ -3,7 +3,11 @@ package ja.tutorial.quizapp
 // 生成方法 New/Kotlin Class/File　からobjectで生成
 object Constants {
 
-    // 
+    const val USER_NAME: String = "user_name" // intentのユーザー名を格納するkeyとして利用
+    const val TOTAL_QUESTIONS: String = "total_questions"
+    const val CORRECT_ANSWER: String = "correct_answers"
+
+    // 固定値の問題を取得する関数
     fun getQuestions(): ArrayList<Question> {
         // ArrayListインスタンスを作成
         val questionsList = ArrayList<Question>()

@@ -22,10 +22,18 @@ class MainActivity : AppCompatActivity() {
             if (etName.text.isEmpty()) {
                 Toast.makeText(this, "入力してください", Toast.LENGTH_LONG).show()
             } else {
+                // intentを生成
                 val intent = Intent(this, QuizQuestionsActivity::class.java)
+                // 入力値を次の画面に渡す
+                intent.putExtra(Constants.USER_NAME, etName.text.toString())
+                // 画面遷移
                 startActivity(intent)
+                // 現在画面のスタックを削除
                 finish()
             }
         }
     }
+
+    // ボタンの操作を無効にする
+    override fun onBackPressed() {}
 }
